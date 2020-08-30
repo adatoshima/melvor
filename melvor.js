@@ -1,4 +1,3 @@
-
 class Action {
   constructor(name, action, init=null, clearup=null) {
     this.name = name;
@@ -142,6 +141,7 @@ class XGame {
       [5,1],  // whale
       [6,2],  // leaping board fish
       [7,1],  // skeleton
+      [7,0],  // seahorse
       [2,0],  // blowfish
     ];
     for (let e of f) {
@@ -198,5 +198,25 @@ class XGame {
 
   notify(message, type='danger') {
     One.helpers('notify', {type:type , from:'bottom', align:'center', message:message});
+  }
+
+  plantAndDestory(seed, keep=0) {
+    if (newFarmingAreas[0].patches[0].seedID != 0) {
+      this.notify('field is not unavailable');
+      return;
+    }
+    selectedPatch = [0,0];
+    if (seed === undefined) seed = selectedSeed;
+    if (!items[seed] || items[seed].type!='Seeds') return;
+    let bankID;
+    const n = (+keep || 0)+items[selectedSeed].seedsRequired;
+    do {
+      bankID = getBankId(seed);
+      if (bankID === false) return;
+      if (bank[bankID].qty < n) return;
+      plantSeed();
+      removeSeed(0,0);
+    } while(true);
+
   }
 }
